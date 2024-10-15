@@ -12,7 +12,7 @@ if __name__ == "__main__":
     #ap.add_argument("-f", "--freeze-layers", type=int, default=0, help="number of layers to freeze. default = 0")
     ap.add_argument("-m", "--model", default="yolov8s.yaml", help="model to use for training. default = yolov8s")
     ap.add_argument("-p", "--pretrained", default="yolov8s.pt", help="model to use for training. default = yolov8s")
-    ap.add_argument("-dv", "--device", nargs='+', default=[0,1,2,3], help="devices to use for training")
+    ap.add_argument("-dv", "--device", nargs='+', default=0, help="devices to use for training")
     ap.add_argument("-s", "--img_size", type=int, default=640, help="image size")
     ap.add_argument("-sp", "--split", default="test", help="validate on train, val/valid or test split")
 
@@ -51,10 +51,9 @@ if __name__ == "__main__":
         img_fns = os.listdir(args.test_image_folder)
 
         for img in img_fns: 
-            img_path = os.path.join(args.test_image_foldr,img) 
-            result = model(img_path) #can be made into batch mode later  
-            boxes = result.boxes  # Boxes object for bounding box outputs
-            probs = result.probs  # Probs object for classification outputs
-            result.show()  # display to screen
-            result.save(filename=os.path.join(img_path, "-result.jpg"))  # save to disk 
+            img_path = os.path.join(args.test_image_folder,img)
+            results = model.predict(img_path, device=args.device, save=True, imgsz=args.img_size, conf=args.conf, iou=args.iou) 
+            for result in results: 
+                boxes = result.boxes  # Boxes object for bounding box outputs
+                probs = result.probs  # Probs object for classification outputs
 
