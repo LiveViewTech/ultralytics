@@ -31,9 +31,9 @@ if __name__ == "__main__":
     if args.job == 'validate' or args.job == 'test':
         model = YOLO(args.pretrained) 
     else:      
-        model = YOLO(args.pretrained) 
-        #mddeo = model.load(args.pretrained)   
-     
+        if args.model is not None:
+            model = YOLO(args.model) 
+        model = model.load(args.pretrained)    
         
     # Train the model
     if args.job == 'train': 
