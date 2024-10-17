@@ -12,14 +12,11 @@ if __name__ == "__main__":
     ap.add_argument("-dv", "--device", nargs='+', default=0, help="devices to use for training")
     ap.add_argument("--iou", type=float, default = 0.5, help="iou threshold in validation or prediction") 
     ap.add_argument("--conf",type=float, default = 0.5, help="confidence threshold for validation or prediction") 
-
     ap.add_argument("-v", "--video_file", default="0BA6DC77C80111EDA91406A1F89FF547_12960_20240810095143_46124.mp4", help="test video file")
-
-    ap.add_argument("--video_folder", default="../Datasets/Intrusion/initial-data-1.0", help="video folder")
+    ap.add_argument("--video_folder", default="../Datasets/Intrusion/initial-data-1.0", required=True,  help="video folder")
     ap.add_argument('--debug', action='store_true')
     ap.add_argument('--save_track_video', action='store_true')  
-    ap.add_argument("--save_dir", default="./results", help="model to use for training. default = yolov8s")
-
+    ap.add_argument("--save_dir", default="./results", help="directory to save results")
     ap.add_argument("--classes", nargs='+', default= None, type=int, help="classes included in detection and tracking")
 
     args = ap.parse_args()
