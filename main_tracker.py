@@ -8,7 +8,7 @@ import cv2
 
 if __name__ == "__main__":
     ap = ap.ArgumentParser()
-    ap.add_argument("-p", "--pretrained", default="runs_from_gpu/run_q4/detect/train14/weights/best.pt", help="model to use for training. default = yolov8s")
+    ap.add_argument("-p", "--pretrained", default="best.pt", required=True, help="model to use for training. default = yolov8s")
     ap.add_argument("-dv", "--device", nargs='+', default=0, help="devices to use for training")
     ap.add_argument("--iou", type=float, default = 0.5, help="iou threshold in validation or prediction") 
     ap.add_argument("--conf",type=float, default = 0.5, help="confidence threshold for validation or prediction") 
@@ -17,8 +17,10 @@ if __name__ == "__main__":
 
     ap.add_argument("--video_folder", default="../Datasets/Intrusion/initial-data-1.0", help="video folder")
     ap.add_argument('--debug', action='store_true')
-    ap.add_argument('--save', action='store_true') 
+    ap.add_argument('--save_track_video', action='store_true')  
+    ap.add_argument("--save_dir", default="./results", help="model to use for training. default = yolov8s")
 
+    ap.add_argument("--classes", nargs='+', default= None, type=int, help="classes included in detection and tracking")
 
     args = ap.parse_args()
     print('args = ', args) 
@@ -26,7 +28,11 @@ if __name__ == "__main__":
 
     model = YOLO(args.pretrained)
 
-    save_dir = './results' 
+    if len(args.save_dir)>0:
+        save_dir = args.save_dir
+    else:
+        save_dir = "./results" 
+
     if not os.path.exists(save_dir):
         os.makedirs(save_dir) 
 
@@ -36,7 +42,6 @@ if __name__ == "__main__":
         video_files = [args.video_file] 
 
     for v in video_files: 
-
 
         result_file = f'{save_dir}/{v}_result.pkl' 
         print(result_file) 
@@ -56,7 +61,11 @@ if __name__ == "__main__":
             print("Skip fisheye video: ", v) 
             continue 
 
-        results = model.track(video_file, save=args.debug or args.save, show=False, tracker="bytetrack.yaml", classes=[3,4,6,7],conf=args.conf,iou=args.iou)  # with ByteTrack
+        if args.classes is None:
+            results = model.track(video_file, save=args.debug or args.save_track_video, show=False, tracker="bytetrack.yaml",conf=args.conf,iou=args.iou)  # with ByteTrack
+        else:
+            results = model.track(video_file, save=args.debug or args.save_track_video, show=False, tracker="bytetrack.yaml", classes=args.classes, conf=args.conf,iou=args.iou)  # with ByteTrack
+
         
         results_to_save = {}  
 
