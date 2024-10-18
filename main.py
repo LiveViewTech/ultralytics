@@ -10,7 +10,7 @@ if __name__ == "__main__":
     ap.add_argument("-b", "--batch_size", type=int, default=256, help="batch size for training. default = auto-batch")
     ap.add_argument("-e", "--epochs", type=int, default=300, help="number of epochs to train for. default = 300")
     #ap.add_argument("-f", "--freeze-layers", type=int, default=0, help="number of layers to freeze. default = 0")
-    ap.add_argument("-m", "--model", default=None, help="model to use for training. default = yolov8s")
+    ap.add_argument("-m", "--model", default=None, help="model to use for training. default = None")
     ap.add_argument("-p", "--pretrained", default="yolov8s.pt", help="model to use for training. default = yolov8s")
     ap.add_argument("-dv", "--device", nargs='+', default=0, help="devices to use for training")
     ap.add_argument("-s", "--img_size", type=int, default=640, help="image size")
@@ -33,7 +33,9 @@ if __name__ == "__main__":
     else:      
         if args.model is not None:
             model = YOLO(args.model) 
-        model = model.load(args.pretrained)    
+            model = model.load(args.pretrained)   
+        else: 
+            model = YOLO(args.pretrained) 
         
     # Train the model
     if args.job == 'train': 
