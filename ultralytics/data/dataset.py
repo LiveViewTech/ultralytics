@@ -7,6 +7,7 @@ from collections import defaultdict
 from itertools import repeat
 from multiprocessing.pool import ThreadPool
 from pathlib import Path
+import os
 
 import cv2
 import numpy as np
@@ -290,10 +291,15 @@ class YOLODatasetCSV(YOLODataset):
         im_files = []
         la_files = []
         with open(img_path, mode='r') as file:
+            p = Path(img_path)
+            parent = str(p.parent) + os.sep
             img_label_csv = csv.reader(file)
             for lines in img_label_csv:
-                im_files.append(lines[0])
-                la_files.append(lines[1])
+                x, y = lines[0], lines[1]
+                x = x.replace("./", parent) if x.startswith("./") else x
+                y = y.replace("./", parent) if y.startswith("./") else y
+                im_files.append(x)
+                la_files.append(y)
 
         self.label_files = la_files
 
