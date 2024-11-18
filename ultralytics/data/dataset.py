@@ -296,8 +296,8 @@ class YOLODatasetCSV(YOLODataset):
             img_label_csv = csv.reader(file)
             for lines in img_label_csv:
                 x, y = lines[0], lines[1]
-                x = x.replace("./", parent) if x.startswith("./") else x
-                y = y.replace("./", parent) if y.startswith("./") else y
+                x = x.replace("./", parent, 1) if x.startswith("./") else x
+                y = y.replace("./", parent, 1) if y.startswith("./") else y
                 im_files.append(x)
                 la_files.append(y)
 
