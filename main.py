@@ -43,10 +43,12 @@ if __name__ == "__main__":
 
     elif args.job == 'validate':  #dataset with GT  
         metrics = model.val(data=args.dataset, device=args.device, batch=args.batch_size, split = args.split, imgsz=args.img_size, conf=args.conf, iou=args.iou) 
-        print(metrics.box.map)  # mAP50-95
-        print(metrics.box.map50)  # mAP50
+        print(f'mAP50-95: {metrics.box.map}')  # mAP50-95
+        print(f'mAP50: {metrics.box.map50}')  # mAP50
         #print(metrics.box.map75)  # mAP75
-        print(metrics.box.maps)  # list of mAP50-95 for each category
+        print(f'mAP50-95 for each category: {metrics.box.maps}')  # list of mAP50-95 for each category
+        print(f'FP on background: {metrics.confusion_matrix.matrix[:-1, -1]}')
+
 
     elif args.job == 'test':  #dataset w/o GT
         #only support images directly in a folder 
